@@ -79,15 +79,13 @@ class Network:
             self.tokenizer = pickle.load(handle)
 
     def get_tokenized_sentence(self, sentence):
-        self.model.load_weights("checkpoint/variables/variables")
-        print(sentence)
         sentence = self.okt.morphs(sentence, stem=True)
         sentence = [word for word in sentence if not word in self.stopwords]
         encoded = self.tokenizer.texts_to_sequences([sentence])
         padding_sentence = pad_sequences(encoded, maxlen=30)
         score = self.model.predict(padding_sentence).argmax()
         # 1이 긍정, 0이 부정
-        print(score)
+        return score
 
 
 if __name__ == "__main__":

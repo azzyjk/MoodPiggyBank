@@ -1,8 +1,6 @@
-from flask import Flask, render_template, request, Response
-from flask_cors import CORS, cross_origin
+from flask import Flask, request, Response
+from flask_cors import CORS
 from MachineLearning import main_2
-import os
-from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -15,10 +13,13 @@ AI.test_ready()
 @app.route('/gamsung', methods=['GET', 'POST'])
 def get_gamsung():
     if request.method == 'POST':
-        result = AI.get_tokenized_sentence(request.json["text"])
+        get_string = request.json["text"]
+        result = AI.get_tokenized_sentence(get_string)
         if result == 1:
+            print(str(result), " ", get_string)
             return Response('{"result":"1"}', status=200, mimetype='application/json')
         elif result == 0:
+            print("-1 ", get_string)
             return Response('{"result":"-1"}', status=200, mimetype='application/json')
     if request.method == 'GET':
         return Response('{"message":"Wrong Access"}', status=400, mimetype='application/json')
