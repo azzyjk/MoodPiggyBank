@@ -11,7 +11,7 @@ class Network:
     tokenizer = Tokenizer(19417, oov_token='OOV')
     okt = Okt()
 
-    def __init__(self):
+    def __init__(self, get_data=False):
         # init model
         self.model = tf.keras.Sequential([
             tf.keras.layers.Embedding(19417, 100),
@@ -23,8 +23,10 @@ class Network:
         self.model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['accuracy'])
         self.model.summary()
 
-        # init data
-        self.train_X, self.train_Y, self.test_X, self.test_Y = self.refine_data()
+        if not get_data:
+            self.train_X, self.train_Y, self.test_X, self.test_Y = None, None, None, None
+        else:
+            self.train_X, self.train_Y, self.test_X, self.test_Y = self.refine_data()
 
     def refine_data(self):
         trainfile, testfile = open("./ratings_train.txt"), open("./ratings_test.txt")
