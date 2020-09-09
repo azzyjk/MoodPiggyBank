@@ -4,7 +4,7 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from konlpy.tag import Okt
-
+import pickle
 
 class Network:
     stopwords = ['의', '가', '이', '은', '들', '는', '좀', '잘', '걍', '과', '도', '를', '으로', '자', '에', '와', '한', '하다']
@@ -57,6 +57,10 @@ class Network:
         result_data[0] = pad_sequences(self.tokenizer.texts_to_sequences(result_data[0]), maxlen=30)
         result_data[2] = pad_sequences(self.tokenizer.texts_to_sequences(result_data[2]), maxlen=30)
 
+        # saving
+        with open('tokenizer.pickle', 'wb') as handle:
+            pickle.dump(self.tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
             #  train_X         train_Y         test_X          test_Y
         return result_data[0], result_data[1], result_data[2], result_data[3]
 
@@ -71,8 +75,12 @@ class Network:
 
     def test_ready(self):
         self.model.load_weights("checkpoint/variables/variables")
+        with open('checkpoint/tokenizer.pickle', 'rb') as handle:
+            self.tokenizer = pickle.load(handle)
 
     def get_tokenized_sentence(self, sentence):
+        self.model.load_weights("checkpoint/variables/variables")
+        print(sentence)
         sentence = self.okt.morphs(sentence, stem=True)
         sentence = [word for word in sentence if not word in self.stopwords]
         encoded = self.tokenizer.texts_to_sequences([sentence])
@@ -83,8 +91,9 @@ class Network:
 
 
 if __name__ == "__main__":
-    test = Network()
+    test = Network(True)
     test.train()
     test.test()
+    test.test_ready()
     test.get_tokenized_sentence("오늘은 날씨가 좋네")
 
