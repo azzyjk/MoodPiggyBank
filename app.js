@@ -160,7 +160,8 @@ app.post('/getDairy', function(req, res) {
                                         kakaoData = {
                                             emotion: response.data.result,
                                             sendUrl: '-1',
-                                            imgUrl: '-1'
+                                            imgUrl: '-1',
+                                            goal : '-1'
                                         
                                         }
                                         var sql;
@@ -215,7 +216,8 @@ app.post('/getDairy', function(req, res) {
                                         kakaoData = {
                                             emotion: response.data.result,
                                             sendUrl: result[0].send,
-                                            imgUrl: '-1'
+                                            imgUrl: '-1',
+                                            goal : '-1'
                                             
                                         }
                                         mysql.query('select * from feeling where id = ?', id,
@@ -225,7 +227,7 @@ app.post('/getDairy', function(req, res) {
                                                     var sql;
                                                     var tmp;
                                                     var day = date.getDay();
-                                                    //var day = '7';
+                                                    //day = '7';
                                                     if (day == '1') {
                                                         tmp = result[0].mon;
                                                         sql = 'update feeling set mon = ?, print = 0 where id =?'
@@ -266,16 +268,84 @@ app.post('/getDairy', function(req, res) {
                                                                             mysql.query(sql, [ Number(kakaoData.emotion), id], function(err, result) {
                                                                                 if (err) console.log(err);
                                                                                 else {
-                                                                                    kakaoData = {
+                                                                                    mysql.query('select * from member_info where id = ?'
+                                                                                    ,id
+                                                                                    ,function(err,result){
+                                                                                        if(err) console.log(err);
+                                                                                        else{
+                                                                                         
+                                                                                            var goal_amount = result[0].goal_amount;
+                                                                                            var goal_reasone = result[0].goal_reason;
+                                                                                            var acheive;
 
-                                                                                        emotion: kakaoData.emotion,
-                                                                                        sendUrl: kakaoData.sendUrl,
+                                                                                            if(result[0].goal_amount == '-1'){
+                                                                                                if(response.data.result == '-1'){
+                                                                                                    mysql.query('update member_info set money = ? where id =?'
+                                                                                                    ,[result[0].money + result[0].amount,id]
+                                                                                                    ,function(err,result){
+                                                                                                        if(err) console.log(err);
+                                                                                                    })
+                                                                                                }
+                                                                                                
+                                                                                                kakaoData = {
+                                                                                                    emotion: kakaoData.emotion,
+                                                                                                    sendUrl: kakaoData.sendUrl,
+                                                                                                    imgUrl: 'http://218.144.108.84/' + pythonResult[0],
+                                                                                                    goal : '-1'
+                                                                                                }
+                                                                                                console.log(kakaoData.imgUrl);
 
-                                                                                        imgUrl: 'http://218.144.108.84/' + pythonResult[0]
-                                                                                    }
-                                                                                    console.log(kakaoData.imgUrl);
+                                                                                                res.send(kakaoData);
+                                                                                            }
+                                                                                            else{
+                                                                                               var goal_amount = result[0].goal_amount;
+                                                                                               var goal_reason = result[0].goal_reason;
+                                                                                               acheive = result[0].money + result[0].amount - result[0].goal_amount;
+                                                                                                if(response.data.result == '-1'){
+                                                                                                    mysql.query('update member_info set money = ? where id =?'
+                                                                                                    ,[result[0].money + result[0].amount,id]
+                                                                                                    ,function(err,result){
+                                                                                                        if(err) console.log(err);
+                                                                                                    })
+                                                                                                }
+                                                                                                
+                                                                                               if(acheive >= 0){
+                                                                                                    kakaoData = {
+                                                                                                    emotion: kakaoData.emotion,
+                                                                                                    sendUrl: kakaoData.sendUrl,
+                                                                                                    imgUrl: 'http://218.144.108.84/' + pythonResult[0],
+                                                                                                     goal : {
+                                                                                                                amount : goal_amount,
+                                                                                                                reason : goal_reason
 
-                                                                                    res.send(kakaoData);
+                                                                                                            }
+
+
+                                                                                                }
+                                                                                                console.log(kakaoData);
+
+                                                                                                res.send(kakaoData);
+
+                                                                                               }
+                                                                                               else{
+                                                                                                kakaoData = {
+                                                                                                    emotion: kakaoData.emotion,
+                                                                                                    sendUrl: kakaoData.sendUrl,
+                                                                                                    imgUrl: 'http://218.144.108.84/' + pythonResult[0],
+                                                                                                    goal : '-1'
+                                                                                                }
+                                                                                                console.log(kakaoData);
+
+                                                                                                res.send(kakaoData);
+
+                                                                                               }
+                                                                                            }
+                                                                                        }
+
+
+                                                                                    
+                                                                                    })
+                                                                                    
                                                                                     }
 
                                                                                 })
@@ -289,8 +359,63 @@ app.post('/getDairy', function(req, res) {
                                                                 mysql.query(sql, [Number(tmp) + Number(kakaoData.emotion), id], function(err, result) {
                                                                                 if (err) console.log(err);
                                                                                 else {
-                                                                                    res.send(kakaoData);
+                                                                                    if(response.data.result == '-1'){
+                                                                                    mysql.query('select * from member_info where id = ?'
+                                                                                    ,id
+                                                                                    ,function(err,result){
+                                                                                        if(err) console.log(err);
+                                                                                        else{
+                                                                                            if(result[0].goal_amount == '-1'){
+                                                                                               
+                                                                                                res.send(kakaoData);
+                                                                                            }
+                                                                                            else{
+                                                                                                var goal_amount = result[0].goal_amount;
+                                                                                                var goal_reason = result[0].goal_reason;
+                                                                                                var acheive = result[0].money + result[0].amount - result[0].goal_amount;
+                                                                                                 mysql.query('update member_info set money = ? where id = ?'
+                                                                                                ,[result[0].money + result[0].amount,id]
+                                                                                                ,function(err,result){
+                                                                                                    if(err) console.log(err);
+                                                                                                    else{
+                                                                                                       if(acheive >=0){
+                                                                                                            kakaoData = {
+                                                                                                            emotion: kakaoData.emotion,
+                                                                                                            sendUrl: kakaoData.sendUrl,
+                                                                                                            imgUrl: '-1',
+                                                                                                            goal : {
+                                                                                                                amount : goal_amount,
+                                                                                                                reason : goal_reason
+
+                                                                                                            }
+
+                                                                                                            }
+                                                                                                           console.log(kakaoData);
+                                                                                                            res.send(kakaoData);
+                                                                                                       }
+                                                                                                       else{
+                                                                                                            kakaoData = {
+                                                                                                            emotion: kakaoData.emotion,
+                                                                                                            sendUrl: kakaoData.sendUrl,
+                                                                                                            imgUrl: '-1',
+                                                                                                            goal : '-1'
+                                                                                                            }
+
+                                                                                                            console.log(kakaoData);
+                                                                                                           res.send(kakaoData);
+
+                                                                                                       }
+                                                                                                    }
+                                                                                                })
+                                                                                            }
+                                                                                        }
+                                                                                    })}
+                                                                                    else{
+
+                                                                                                console.log(kakaoData);
+                                                                                        res.send(kakaoData);
                                                                                     }
+                                                                                }
 
                                                                       })
                                                             }
@@ -300,7 +425,53 @@ app.post('/getDairy', function(req, res) {
                                                         mysql.query(sql, [Number(tmp) + Number(kakaoData.emotion), id], function(err, result) {
                                                             if (err) console.log(err);
                                                             else {
-                                                                res.send(kakaoData);
+                                                                mysql.query('select * from member_info where id = ?'
+                                                                ,id
+                                                                ,function(err,result){
+                                                                    if(err) console.log(err);
+                                                                    else{
+                                                                        if(response.data.result == '-1'){
+                                                                            if(result[0].goal_amount != '-1'){
+                                                                                var goal_amount = result[0].goal_amount;
+                                                                                                var goal_reason = result[0].goal_reason;
+                                                                                var acheive = result[0].money + result[0].amount - result[0].goal_amount;
+                                                                                mysql.query('update member_info set money = ? where id = ?'
+                                                                                ,[result[0].amount + result[0].money,id]
+                                                                                ,function(err,result){
+                                                                                    if(err) console.log(err);
+                                                                                })
+                                                                                if(acheive >= 0){
+                                                                                    kakaoData = {
+                                                                                                            emotion: kakaoData.emotion,
+                                                                                                            sendUrl: kakaoData.sendUrl,
+                                                                                                            imgUrl: '-1',
+                                                                                                            goal : {
+                                                                                                                amount : goal_amount,
+                                                                                                                reason : goal_reason
+
+                                                                                                            }
+                                                                                                            }
+                                                                                                           
+                                                                                                console.log(kakaoData);
+                                                                                                           res.send(kakaoData);
+
+                                                                                }
+                                                                                else{
+                                                                                                console.log(kakaoData);
+                                                                                    res.send(kakaoData);
+                                                                                }
+                                                                            }
+                                                                            else{
+                                                                                                console.log(kakaoData);
+                                                                                res.send(kakaoData);
+                                                                            }
+                                                                        }
+                                                                        else{
+                                                                                                console.log(kakaoData);
+                                                                            res.send(kakaoData);
+                                                                        }
+                                                                    }
+                                                                })
                                                             }
 
                                                         })
@@ -323,6 +494,17 @@ app.post('/getDairy', function(req, res) {
 
     })
 
+});
+
+//goal reset 
+app.post('/goal_acheive',function(req,res){
+
+    var id = req.body.id;
+    mysql.query('update member_info set money = 0, goal_amount =0, goal_reason = `-1` where id = ?'
+    ,function(err,result){
+        if(err) console.log(err);
+    });
+    res.send('ok');
 });
 ///open server
 app.get('/', function(req, res) {
