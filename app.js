@@ -53,7 +53,7 @@ app.post('/goal', function(req, res) {
             }
             //exist member
             else {
-                mysql.query('update member_info set goal_amount = ?, goal_reason = ? where id = ?', [goal_amount, goal_reason, id], function(err, result) {
+                mysql.query('update member_info set money = 0, goal_amount = ?, goal_reason = ? where id = ?', [goal_amount, goal_reason, id], function(err, result) {
                     if (err) console.log(err);
                     else {
                         sendResult = {
@@ -476,7 +476,7 @@ app.post('/getDairy', function(req, res) {
 app.post('/goal_acheive', function(req, res) {
 
     var id = req.body.id;
-    mysql.query('update member_info set money = 0, goal_amount =0, goal_reason = `-1` where id = ?',id, function(err, result) {
+    mysql.query('update member_info set money = 0, goal_amount = 10000000, goal_reason = -1 where id = ?',id, function(err, result) {
         if (err) console.log(err);
     });
     res.send('ok');
