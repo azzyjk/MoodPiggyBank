@@ -160,9 +160,8 @@ app.post('/getDairy', function(req, res) {
                                         kakaoData = {
                                             emotion: response.data.result,
                                             sendUrl: '-1',
-                                            //imgUrl: '-1'
+                                            imgUrl: '-1'
                                         
-                                                                                        imgUrl: 'http://218.144.108.84/' + id + '.png'
                                         }
                                         var sql;
                                         var tmp;
@@ -216,9 +215,8 @@ app.post('/getDairy', function(req, res) {
                                         kakaoData = {
                                             emotion: response.data.result,
                                             sendUrl: result[0].send,
-                                            //imgUrl: '-1'
+                                            imgUrl: '-1'
                                             
-                                                                                        imgUrl: 'http://218.144.108.84/' + id + '.png'
                                         }
                                         mysql.query('select * from feeling where id = ?', id,
                                             function(err, result) {
@@ -248,7 +246,7 @@ app.post('/getDairy', function(req, res) {
                                                         tmp = result[0].sat;
                                                         sql = 'update feeling set sat = ? , print = 0where id =?'
                                                     } else if (day == '7') {
-                                                        tmp = '0';
+                                                        tmp = result[0].sun;
                                                         sql = 'update feeling set sun = ? where id =?'
 
                                                     } else {}
@@ -265,7 +263,7 @@ app.post('/getDairy', function(req, res) {
                                                                     PythonShell.run('graph.py', pythonOptions, function(err, pythonResult) {
                                                                         if (err) console.log(err);
                                                                         else {
-                                                                            mysql.query(sql, [Number(tmp) + Number(kakaoData.emotion), id], function(err, result) {
+                                                                            mysql.query(sql, [ Number(kakaoData.emotion), id], function(err, result) {
                                                                                 if (err) console.log(err);
                                                                                 else {
                                                                                     kakaoData = {
