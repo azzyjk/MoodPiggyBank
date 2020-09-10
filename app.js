@@ -476,7 +476,7 @@ app.post('/getDairy', function(req, res) {
 app.post('/goal_acheive', function(req, res) {
 
     var id = req.body.id;
-    mysql.query('update member_info set money = 0, goal_amount =0, goal_reason = `-1` where id = ?', function(err, result) {
+    mysql.query('update member_info set money = 0, goal_amount =0, goal_reason = `-1` where id = ?',id, function(err, result) {
         if (err) console.log(err);
     });
     res.send('ok');
