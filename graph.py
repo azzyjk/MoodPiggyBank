@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import pymysql
-
+import time
 rasDb = pymysql.connect(
 
     user = 'h2',
@@ -21,9 +21,11 @@ x=['mon','tue','wed','thr','fri','sat','sun']
 plt.plot(x,y, marker = 'o')
 plt.draw()
 fig = plt.gcf()
-fig.savefig('./graph/' + result[0]['id'] + '.png', dpi=fig.dpi)
-sql2 = "UPDATE feeling SET mon = 0, tue = 0, wed = 0, thr = 0, fri = 0, sat = 0, sun =0, print = 0 where print = 1;"
+fileName = './graph/' + str(time.time())[0:10] + result[0]['id'] + '.png'
+fig.savefig(fileName, dpi=fig.dpi)
+sql2 = "UPDATE feeling SET mon = 0, tue = 0, wed = 0, thr = 0, fri = 0, sat = 0, sun =0 where print = 1;"
 cursor.execute(sql2)
 rasDb.commit()
 result = cursor.fetchall()
+print(fileName[8:])
 rasDb.close()
