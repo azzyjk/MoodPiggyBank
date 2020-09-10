@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang = "ko">
+<head>
+    <meta charset = "UTF-8">
+    <meta name = "viewport" content = "width=device-width, initial=scale=1.0">
+    <title>D3 Test</title>
+</head>
+<body>
+    <svg width="500" height = "500"></svg>
+    <button onclick = "saveAsImage(`pls`)">down</button>
+    <script src = "http://d3js.org/d3.v4.min.js"></script>
+    <script src = './good.js'></script>
+    <script>
+        var  data = [5,10,15,20,25,30,35,40,45,50];
+        var  svg = d3.select('svg');
+
+        data.forEach((d,i) => {
+            svg.append('rect')
+                .attr('height',data[i])
+                .attr('width',40)
+                .attr('x',50 * i)
+                .attr('y',100-data[i])
+        })
+
+        function saveAsImage(name){
+            var svg = d3.select('svg');
+            console.log('pz');
+            saveSvgAsPng(svg,name + '.png');
+        }
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPrograming</title>
+    <script language="javascript" type="text/javascript" src="./Script1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/logintheme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dosis&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+    <style type="text/css">
+        a { text-decoration: none; text-align: center;}
+    </style>
+</head>
+<body onhashchange = Init();>
+  
+
+    <div class="head">
+        <header>
+            <h1><p class="title"><a href="index.html">A<sup>+</sup>star</a></p></h1>
+            <h2><p class="subtitle"><small><div class = "sub_title"></div></small></p></h2>
+        </header>
+    </div>
+    <div class="body">
+        <div class="Wrapper">
+            <div class="Entry">
+               <form name="login_box" action= "/" method="POST">
+               <div class="login_Wrapper">
+                        <div class="login_head">
+                           <div class = "sub_title"><strong></strong></div>
+                        </div>
+                        <div class="login_body">
+                            <ul>
+                                <li><label><div class="first_comment"></div></label></li>
+                                <li><input type="text" class="text" name="first_post"></li>
+                                <li><label><div class="second_comment"></div></label></li>
+                                <li><input type="text" class="text" name="second_post"></li>
+                                <article></article>
+                            </ul>
+                            <div class="buttons">
+                                <button type="submit" id="btn" class="btn_submit"><div class = "submit"></div></button>
+                            </div>
+
+                            <menu></menu>
+                        </div>
+                    </div>
+               </form>
+            </div>
+        </div>
+    </div>
+<script src = "./js/login.js"> </script>
+
+
+</body>
+</html>
