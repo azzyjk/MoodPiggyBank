@@ -1,7 +1,6 @@
 import csv
 import numpy as np
 import tensorflow as tf
-from gensim.models import Word2Vec
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from konlpy.tag import Okt
@@ -13,17 +12,86 @@ class Network:
     okt = Okt()
 
     def __init__(self, get_data=1):
-        # init model
-        tf.keras.Model
+        """/
+        # init model 0번째 모델
+        layer1 = tf.keras.layers.Embedding(19417, 200),
+        layer2 = tf.keras.layers.GRU(units=128),
+        layer3 = tf.keras.layers.Dropout(rate=0.2),
+        layer4 = tf.keras.layers.GRU(units=64),
+        layer5 = tf.keras.layers.Flatten(),
+        layer6 = tf.keras.layers.BatchNormalization(axis=1, epsilon=1.001e-5),
+        layer7 = tf.keras.layers.Dropout(rate=0.2),
+            # tf.keras.layers.LSTM(units=64, return_sequences=False),
 
-        self.model = tf.keras.Sequential([
-            tf.keras.layers.Embedding(19417, 100),
-            tf.keras.layers.LSTM(128),
-            tf.keras.layers.Dense(units=2, activation='softmax')
-        ])
-        # self.earlyStop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=4, restore_best_weights=True)
+        layer_plus = tf.keras.layers.Add()([layer1, layer2])
+        
+        layer8 = tf.keras.layers.Dense(units=2, activation='softmax')[layer_plus]
+        """
+
+        """ 1번째 모델
+        input1 = tf.keras.layers.Input(shape=(30, ))
+        x1 = tf.keras.layers.Embedding(19417, 200)(input1)
+        x2 = tf.keras.layers.GRU(units=128, return_sequences=True)(x1)
+        x2 = tf.keras.layers.GRU(units=64)(x2)
+        x2 = tf.keras.layers.Dropout(rate=0.3)(x2)
+        x1 = tf.keras.layers.Flatten()(x1)
+        x1 = tf.keras.layers.Dense(units=64)(x1)
+        added = tf.keras.layers.Add()([x1, x2])
+        # x3 = tf.keras.layers.BatchNormalization(axis=1, epsilon=1.001e-5)(added)
+        out = tf.keras.layers.Dense(units=2, activation='softmax')(added)
+        """
+
+        """ 2번째 모델
+        input1 = tf.keras.layers.Input(shape=(30, ))
+        x1 = tf.keras.layers.Embedding(19417, 200)(input1)
+        x1 = tf.keras.layers.GRU(units=200, return_sequences=True)(x1)
+        x1 = tf.keras.layers.GRU(units=100, return_sequences=False)(x1)
+        x1 = tf.keras.layers.Dropout(rate=0.3)(x1)
+        out = tf.keras.layers.Dense(units=2, activation='softmax')(x1)
+        """
+
+        """ 3번째 코드
+        input1 = tf.keras.layers.Input(shape=(30, ))
+        x1 = tf.keras.layers.Embedding(19417, 200)(input1)
+        x2 = tf.keras.layers.LSTM(units=200, return_sequences=True)(x1)
+        x1 = tf.keras.layers.Add()([x1, x2])
+        x1 = tf.keras.layers.Flatten()(x1)
+        out = tf.keras.layers.Dense(units=2, activation='softmax')(x1)
+        """
+    
+        """    # 4번째 코드 (basic)
+        input1 = tf.keras.layers.Input(shape=(30, ))
+        x1 = tf.keras.layers.Embedding(19417, 200)(input1)
+        x1 = tf.keras.layers.LSTM(128)(x1)
+        out = tf.keras.layers.Dense(2, activation='softmax')(x1)
+        """
+        # 5번째 코드
+        input1 = tf.keras.layers.Input(shape=(30,))
+        x = tf.keras.layers.Embedding(19417, 200)(input1)
+        x = tf.keras.layers.Dropout(rate=0.5)(x)
+        
+        x1 = tf.keras.layers.Conv1D(filters=128, kernel_size=3, padding="valid", activation="relu", strides=1)(x)
+        x1 = tf.keras.layers.GlobalMaxPooling1D()(x1)
+        x1 = tf.keras.layers.Flatten()(x1)
+
+        x2 = tf.keras.layers.Conv1D(filters=128, kernel_size=3, padding="valid", activation="relu", strides=1)(x)
+        x2 = tf.keras.layers.GlobalMaxPooling1D()(x2)
+        x2 = tf.keras.layers.Flatten()(x2)
+
+        x3 = tf.keras.layers.Conv1D(filters=128, kernel_size=3, padding="valid", activation="relu", strides=1)(x)
+        x3 = tf.keras.layers.GlobalMaxPooling1D()(x3)
+        x3 = tf.keras.layers.Flatten()(x3)
+
+        x = tf.keras.layers.Concatenate()([x1, x2, x3])
+        x = tf.keras.layers.Dropout(rate=0.8)(x)
+        x = tf.keras.layers.Dense(128)(x)
+        out = tf.keras.layers.Dense(2, activation="softmax")(x)
+        
+
+        self.model = tf.keras.models.Model(inputs=[input1], outputs=out)
+        self.earlyStop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5, restore_best_weights=True)
         self.model_checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath="checkpoint", monitor='val_accuracy', mode='max', verbose=1, save_best_only=True)
-        self.model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['accuracy'])
+        self.model.compile(optimizer=tf.keras.optimizers.Adam(lr=0.00005), loss='binary_crossentropy', metrics=['accuracy'])
         self.model.summary()
 
         if not get_data:
@@ -53,22 +121,22 @@ class Network:
         else:
             print("임베딩까지 완료된 데이터셋을 가져옵니다.")
             train_X, train_Y, test_X, test_Y = self.get_numpy_array("tfTokenizer")
-        print(train_Y)
         print("처리가 완료되었습니다.")
         return train_X, train_Y, test_X, test_Y
 
     def get_raw_tokenized(self):
-        trainfile, testfile = open("./checkpoint/data/ratings_train.txt"), open("./checkpoint/data/ratings_test.txt")
+        trainfile, testfile = open("checkpoint/data/ratings_train.txt", encoding='UTF8'), open("checkpoint/data/ratings_test.txt", encoding='UTF8')
         csv_data = [csv.reader(trainfile, delimiter='\t'), csv.reader(testfile, delimiter='\t')]
         result_data = [[], [], [], []]
         i, j = 0, 0
+        print(csv_data[0])
         for file in csv_data:
             file.__next__()
             for line in file:
                 if line[1] == '' or line[2] == '':
                     pass
                 else:
-                    sentence = self.okt.morphs(line[1], stem=True)
+                    sentence = self.okt.pos(line[1], stem=True)
                     sentence = [word for word in sentence if not word in self.stopwords]
                     result_data[i].append(sentence)  # X
                     result_data[i + 1].append(np.eye(2)[int(line[2])])  # Y
@@ -82,10 +150,10 @@ class Network:
         trainfile.close()
         testfile.close()
 
-        np.save("checkpoint/raw_tokenized/raw1", result_data[0])
-        np.save("checkpoint/raw_tokenized/raw2", result_data[1])
-        np.save("checkpoint/raw_tokenized/raw3", result_data[2])
-        np.save("checkpoint/raw_tokenized/raw4", result_data[3])
+        np.save("checkpoint/raw_tokenized/train_X", result_data[0])
+        np.save("checkpoint/raw_tokenized/train_Y", result_data[1])
+        np.save("checkpoint/raw_tokenized/test_X", result_data[2])
+        np.save("checkpoint/raw_tokenized/test_Y", result_data[3])
 
         return result_data[0], result_data[1], result_data[2], result_data[3]
 
@@ -141,7 +209,7 @@ class Network:
     def get_embedding_tfTokenizer(self, train_X, train_Y, test_X, test_Y):
 
         # pad_sequence things
-        self.tokenizer.fit_on_texts(train_X[0])
+        self.tokenizer.fit_on_texts(train_X)
         train_X = pad_sequences(self.tokenizer.texts_to_sequences(train_X), maxlen=30)
         test_X = pad_sequences(self.tokenizer.texts_to_sequences(test_X), maxlen=30)
 
@@ -168,7 +236,7 @@ class Network:
 
 
     def train(self):
-        self.model.fit(self.train_X, self.train_Y, epochs=15, callbacks=[self.model_checkpoint], batch_size=60, validation_split=0.2)
+        self.model.fit(self.train_X, self.train_Y, epochs=15, callbacks=[self.earlyStop, self.model_checkpoint], batch_size=60, validation_split=0.2)
 
     def test(self):
         self.model.load_weights("checkpoint/variables/variables")
@@ -194,5 +262,5 @@ if __name__ == "__main__":
     test.train()
     test.test()
     test.test_ready()
-    test.get_tokenized_sentence("오늘은 날씨가 좋네")
+    print(test.get_tokenized_sentence("오늘은 날씨가 좋네"))
 
