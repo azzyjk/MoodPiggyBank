@@ -224,27 +224,27 @@ app.post('/getDairy', function(req, res) {
                                                 else {
                                                     var sql;
                                                     var tmp;
-                                                    //var day = date.getDay();
-                                                    var day = '7';
+                                                    var day = date.getDay();
+                                                    //var day = '7';
                                                     if (day == '1') {
                                                         tmp = result[0].mon;
                                                         sql = 'update feeling set mon = ?, print = 0 where id =?'
                                                     } else if (day == '2') {
                                                         tmp = result[0].tue;
-                                                        sql = 'update feeling set tue = ? , print = 0where id =?'
+                                                        sql = 'update feeling set tue = ? , print = 0 where id =?'
                                                     } else if (day == '3') {
                                                         tmp = result[0].wed;
-                                                        sql = 'update feeling set wed = ? , print = 0where id =?'
+                                                        sql = 'update feeling set wed = ? , print = 0 where id =?'
 
                                                     } else if (day == '4') {
                                                         tmp = result[0].thr;
-                                                        sql = 'update feeling set thr = ? , print = 0where id =?'
+                                                        sql = 'update feeling set thr = ? , print = 0 where id =?'
                                                     } else if (day == '5') {
                                                         tmp = result[0].fri;
-                                                        sql = 'update feeling set fri = ? , print = 0where id =?'
+                                                        sql = 'update feeling set fri = ? , print = 0 where id =?'
                                                     } else if (day == '6') {
                                                         tmp = result[0].sat;
-                                                        sql = 'update feeling set sat = ? , print = 0where id =?'
+                                                        sql = 'update feeling set sat = ? , print = 0 where id =?'
                                                     } else if (day == '7') {
                                                         tmp = result[0].sun;
                                                         sql = 'update feeling set sun = ? where id =?'
