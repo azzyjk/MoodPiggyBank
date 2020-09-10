@@ -1,29 +1,29 @@
 import csv
 import numpy as np
 import tensorflow as tf
-from gensim.models import Word2Vec
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from konlpy.tag import Okt
+from gensim.models.word2vec import Word2Vec
 import pickle
+import gensim
+
 
 class Network:
     stopwords = ['의', '가', '이', '은', '들', '는', '좀', '잘', '걍', '과', '도', '를', '으로', '자', '에', '와', '한', '하다']
-    tokenizer = Tokenizer(19417, oov_token='OOV')
     okt = Okt()
 
     def __init__(self, get_data=1):
         # init model
-        tf.keras.Model
-
         self.model = tf.keras.Sequential([
-            tf.keras.layers.Embedding(19417, 100),
-            tf.keras.layers.LSTM(128),
+            tf.keras.layers.Dense(units=1000, activation='relu', input_shape=(2000,)),
+            tf.keras.layers.Dense(units=500, activation='relu'),
             tf.keras.layers.Dense(units=2, activation='softmax')
         ])
         # self.earlyStop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=4, restore_best_weights=True)
-        self.model_checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath="checkpoint", monitor='val_accuracy', mode='max', verbose=1, save_best_only=True)
-        self.model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['accuracy'])
+        self.model_checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath="checkpoint", monitor='val_accuracy',
+                                                                   mode='max', verbose=1, save_best_only=True)
+        self.model.compile(optimizer=tf.keras.optimizers.Adam(lr=0.5), loss='binary_crossentropy', metrics=['accuracy'])
         self.model.summary()
 
         if not get_data:
@@ -44,15 +44,15 @@ class Network:
         if get_data == 1:
             print("파일에서 직접 읽어들인 후 임베딩까지 수행합니다.")
             train_X, train_Y, test_X, test_Y = self.get_raw_tokenized()
-            train_X, train_Y, test_X, test_Y = self.get_embedding_tfTokenizer(train_X, train_Y, test_X, test_Y)
+            train_X, train_Y, test_X, test_Y = self.get_embedding(train_X, train_Y, test_X, test_Y)
 
         elif get_data == 2:
             print("미리 토큰화된 배열을 읽어들인 후 임베딩을 수행합니다.")
             train_X, train_Y, test_X, test_Y = self.get_numpy_array("raw_tokenized")
-            train_X, train_Y, test_X, test_Y = self.get_embedding_tfTokenizer(train_X, train_Y, test_X, test_Y)
+            train_X, train_Y, test_X, test_Y = self.get_embedding(train_X, train_Y, test_X, test_Y)
         else:
             print("임베딩까지 완료된 데이터셋을 가져옵니다.")
-            train_X, train_Y, test_X, test_Y = self.get_numpy_array("tfTokenizer")
+            train_X, train_Y, test_X, test_Y = self.get_numpy_array("word2vec")
         print(train_Y)
         print("처리가 완료되었습니다.")
         return train_X, train_Y, test_X, test_Y
@@ -72,6 +72,12 @@ class Network:
                     sentence = [word for word in sentence if not word in self.stopwords]
                     result_data[i].append(sentence)  # X
                     result_data[i + 1].append(np.eye(2)[int(line[2])])  # Y
+
+                j += 1
+                if j == 100:
+                    j = 0
+                    break
+
             result_data[i + 1] = np.array(result_data[i + 1])
             i += 2
 
@@ -89,7 +95,7 @@ class Network:
 
         return result_data[0], result_data[1], result_data[2], result_data[3]
 
-    def get_embedding_W2V(self, train_X, train_Y, test_X, test_Y, vector=2000):
+    def get_embedding(self, train_X, train_Y, test_X, test_Y, vector=2000):
         word2vec = Word2Vec(
             train_X,
             sg=1, size=vector, window=3, min_count=3, workers=4
@@ -138,24 +144,6 @@ class Network:
         np.save("checkpoint/word2vec/test_Y", test_Y)
         return final_train_X, train_Y, final_test_X, test_Y
 
-    def get_embedding_tfTokenizer(self, train_X, train_Y, test_X, test_Y):
-
-        # pad_sequence things
-        self.tokenizer.fit_on_texts(train_X[0])
-        train_X = pad_sequences(self.tokenizer.texts_to_sequences(train_X), maxlen=30)
-        test_X = pad_sequences(self.tokenizer.texts_to_sequences(test_X), maxlen=30)
-
-        # saving
-        with open('tokenizer.pickle', 'wb') as handle:
-            pickle.dump(self.tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
-        np.save("checkpoint/tfTokenizer/train_X", train_X)
-        np.save("checkpoint/tfTokenizer/train_Y", train_Y)
-        np.save("checkpoint/tfTokenizer/test_X", test_X)
-        np.save("checkpoint/tfTokenizer/test_Y", test_Y)
-
-            #  train_X         train_Y         test_X          test_Y
-        return train_X, train_Y, test_X, test_Y
-
     def get_numpy_array(self, selection):
         train_X = np.load("checkpoint/" + selection + "/train_X.npy", allow_pickle=True)
         train_Y = np.load("checkpoint/" + selection + "/train_Y.npy", allow_pickle=True)
@@ -163,12 +151,9 @@ class Network:
         test_Y = np.load("checkpoint/" + selection + "/test_Y.npy", allow_pickle=True)
         return train_X, train_Y, test_X, test_Y
 
-
-
-
-
     def train(self):
-        self.model.fit(self.train_X, self.train_Y, epochs=15, callbacks=[self.model_checkpoint], batch_size=60, validation_split=0.2)
+        self.model.fit(self.train_X, self.train_Y, epochs=15, callbacks=[self.model_checkpoint], batch_size=60,
+                       validation_split=0.2)
 
     def test(self):
         self.model.load_weights("checkpoint/variables/variables")
@@ -193,6 +178,6 @@ if __name__ == "__main__":
     test = Network(3)
     test.train()
     test.test()
-    test.test_ready()
-    test.get_tokenized_sentence("오늘은 날씨가 좋네")
+    # test.test_ready()
+    # test.get_tokenized_sentence("오늘은 날씨가 좋네")
 
