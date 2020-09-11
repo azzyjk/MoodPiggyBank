@@ -31,6 +31,7 @@ function axios_diary(user_id, user_text, res) {
         var text_nobank = "저금할 계좌를 등록해 주시면, 안 좋은 일이 있으실 떄마다 소액을 저금할 수 있는 서비스를 이용하실 수 있습니다.";
         var text_goal = "";
         var send_img_form = {};
+        var send_report_form = {};
 
         if(emotion == -1){
             var bad_img_url = "https://diary-chatbot.us-south.cf.appdomain.cloud/img/" + String(user_text.length % 18) + ".jpg";
@@ -51,112 +52,60 @@ function axios_diary(user_id, user_text, res) {
             text_goal = goal_reason + "을(를) 하기 위한 목표금액 " + goal_amount + "원 달성을 축하드립니다. 목표 금액 초기화를 진행하면, 현재 모은 금액과 목표 금액이 모두 초기화되며, 다시 목표 금액 설정을 통해 새로운 목표를 설정하실 수 있습니다.";
         }
 
-        if(img == -1){
-            if(emotion == 1){
-                send_text = 
+        if(emotion == 1){
+            outputs = [
+                {
+                    simpleText: {
+                        text: text_good + text_goal
+                    }
+                }
+            ];
+        }
+        else if(emotion == -1){
+            url = data.sendUrl;
+            if(url == -1){
                 outputs = [
+                    send_img_form,
                     {
                         simpleText: {
-                            text: text_good + text_goal
+                            text: text_bad + text_nobank + text_goal
                         }
                     }
                 ];
             }
-            else if(emotion == -1){
-                url = data.sendUrl;
-                if(url == -1){
-                    outputs = [
-                        send_img_form,
-                        {
-                            simpleText: {
-                                text: text_bad + text_nobank + text_goal
-                            }
-                        }
-                    ];
-                }
-                else{
-                    outputs = [
-                        send_img_form,
-                        {
-                          "basicCard": {
-                            "title": text_bad + text_goal,
-                            "description": text_bank,
-                            "buttons": [
-                              {
-                                "action": "webLink",
-                                "label": "송금 링크",
-                                "webLinkUrl": url
-                              }
-                            ]
-                          }
-                        }
-                    ];
-                }
-            }else{
-                if(emotion == 1){
-                    outputs = [
-                        {
-                          "basicCard": {
-                            "title": "주간 분석 그래프가 도착했어요.",
-                            "description": text_good + text_goal,
-                            "thumbnail": {
-                                "imageUrl": img
-                              },
-                              "profile": {
-                                "imageUrl": img,
-                                "nickname": "주간 분석 그래프"
-                              }
-                          }
-                        }
-                    ];
-                }
-                else if(emotion == -1){
-                    url = data.sendUrl;
-                    if(url == -1){
-                        outputs = [
-                            send_img_form,
+            else{
+                outputs = [
+                    send_img_form,
+                    {
+                        "basicCard": {
+                        "title": text_bad + text_goal,
+                        "description": text_bank,
+                        "buttons": [
                             {
-                                "basicCard": {
-                                "title": "주간 분석 그래프가 도착했어요.",
-                                "description": text_bad + text_nobank + text_goal,
-                                "thumbnail": {
-                                    "imageUrl": img
-                                    },
-                                    "profile": {
-                                    "imageUrl": img,
-                                    "nickname": "주간 분석 그래프"
-                                    }
-                                }
+                            "action": "webLink",
+                            "label": "송금 링크",
+                            "webLinkUrl": url
                             }
-                        ];
+                        ]
+                        }
                     }
-                    else{
-                        outputs = [
-                            send_img_form,
-                            {
-                                "basicCard": {
-                                "title": "주간 분석 그래프가 도착했어요.",
-                                "description": text_bad + text_bank + text_goal,
-                                "thumbnail": {
-                                    "imageUrl": img
-                                    },
-                                    "profile": {
-                                    "imageUrl": img,
-                                    "nickname": "주간 분석 그래프"
-                                    },
-                                    "buttons": [
-                                        {
-                                        "action": "webLink",
-                                        "label": "송금 링크",
-                                        "webLinkUrl": url
-                                        }
-                                    ]
-                                }
-                            }
-                        ];
-                    }
-                }
+                ];
             }
+        }
+
+        if(img != -1){
+            send_report_form = 
+            {
+                "basicCard": 
+                {
+                    "title": "주간 분석 그래프가 도착했어요.",
+                    "description": "일주일간의 감정 변화를 표시한 그래프입니다.",
+                    "thumbnail": {
+                        "imageUrl": img
+                    }
+                }
+            };
+            outputs.push(send_report_form);
         }
         
         send_kakaotalk(res, outputs);
