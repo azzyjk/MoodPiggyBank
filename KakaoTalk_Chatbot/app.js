@@ -25,19 +25,30 @@ function axios_diary(user_id, user_text, res) {
         var img = data.imgUrl;
         var goal = data.goal;
         var outputs = [];
-        var text_good = "긍정 ";
-        var text_bad = "부정 ";
-        var text_bank = "계좌 O ";
-        var text_nobank = "계좌 X ";
+        var text_good = "기분 좋은 일이 있으셨군요! ";
+        var text_bad = "앞으로는 좋은 일이 찾아오기를 기원합니다.";
+        var text_bank = "작은 금액씩 저축을 하다보면, 큰 돈이 모이는 기쁨이 찾아올거에요!";
+        var text_nobank = "저금할 계좌를 등록해 주시면, 안 좋은 일이 있으실 떄마다 소액을 저금할 수 있는 서비스를 이용하실 수 있습니다.";
         var text_goal = "";
+        var send_img_form = {};
+
+        if(emotion == -1){
+            var bad_img_url = "https://diary-chatbot.us-south.cf.appdomain.cloud/img/" + String(user_text.length % 18) + ".jpg";
+            send_img_form = {
+                "simpleImage": {
+                    "imageUrl": bad_img_url,
+                    "altText": "힘들때 힘이 되는 이미지"
+                }
+            };
+        }
 
         if(goal == -1){
-            text_goal = "\n목표금액 미달성(테스트 이후 삭제 예정)"
+            text_goal = ""
         }
         else{
             var goal_amount = goal.amount;
             var goal_reason = goal.reason;
-            text_goal = goal_reason + "을(를) 하기 위한 목표금액 " + goal_amount + "원 달성";
+            text_goal = goal_reason + "을(를) 하기 위한 목표금액 " + goal_amount + "원 달성을 축하드립니다. 목표 금액 초기화를 진행하면, 현재 모은 금액과 목표 금액이 모두 초기화되며, 다시 목표 금액 설정을 통해 새로운 목표를 설정하실 수 있습니다.";
         }
 
         if(img == -1){
@@ -55,6 +66,7 @@ function axios_diary(user_id, user_text, res) {
                 url = data.sendUrl;
                 if(url == -1){
                     outputs = [
+                        send_img_form,
                         {
                             simpleText: {
                                 text: text_bad + text_nobank + text_goal
@@ -64,6 +76,7 @@ function axios_diary(user_id, user_text, res) {
                 }
                 else{
                     outputs = [
+                        send_img_form,
                         {
                           "basicCard": {
                             "title": text_bad + text_goal,
@@ -84,7 +97,7 @@ function axios_diary(user_id, user_text, res) {
                     outputs = [
                         {
                           "basicCard": {
-                            "title": "주간 분석 그래프가 도착했어요",
+                            "title": "주간 분석 그래프가 도착했어요.",
                             "description": text_good + text_goal,
                             "thumbnail": {
                                 "imageUrl": img
@@ -101,9 +114,10 @@ function axios_diary(user_id, user_text, res) {
                     url = data.sendUrl;
                     if(url == -1){
                         outputs = [
+                            send_img_form,
                             {
                                 "basicCard": {
-                                "title": "주간 분석 그래프가 도착했어요",
+                                "title": "주간 분석 그래프가 도착했어요.",
                                 "description": text_bad + text_nobank + text_goal,
                                 "thumbnail": {
                                     "imageUrl": img
@@ -118,10 +132,11 @@ function axios_diary(user_id, user_text, res) {
                     }
                     else{
                         outputs = [
+                            send_img_form,
                             {
                                 "basicCard": {
-                                "title": "주간 분석 그래프가 도착했어요",
-                                "description": text_bank + text_bank + text_goal,
+                                "title": "주간 분석 그래프가 도착했어요.",
+                                "description": text_bad + text_bank + text_goal,
                                 "thumbnail": {
                                     "imageUrl": img
                                     },
@@ -246,3 +261,5 @@ app.listen(port, function () {
 app.get('/', (req, res) => {
     res.send('감성일기 카카오톡 챗봇 API 서버');
 })
+
+app.use(express.static('public'));
