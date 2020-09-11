@@ -23,14 +23,30 @@ function axios_diary(user_id, user_text, res) {
         var data = response.data;
         var emotion = data.emotion;
         var img = data.imgUrl;
+        var goal = data.goal;
         var outputs = [];
+        var text_good = "긍정 ";
+        var text_bad = "부정 ";
+        var text_bank = "계좌 O ";
+        var text_nobank = "계좌 X ";
+        var text_goal = "";
+
+        if(goal == -1){
+            text_goal = "\n목표금액 미달성(테스트 이후 삭제 예정)"
+        }
+        else{
+            var goal_amount = goal.amount;
+            var goal_reason = goal.reason;
+            text_goal = goal_reason + "을(를) 하기 위한 목표금액 " + goal_amount + "원 달성";
+        }
 
         if(img == -1){
             if(emotion == 1){
+                send_text = 
                 outputs = [
                     {
                         simpleText: {
-                            text: "긍정"
+                            text: text_good + text_goal
                         }
                     }
                 ];
@@ -41,7 +57,7 @@ function axios_diary(user_id, user_text, res) {
                     outputs = [
                         {
                             simpleText: {
-                                text: "부정, 계좌X"
+                                text: text_bad + text_nobank + text_goal
                             }
                         }
                     ];
@@ -50,8 +66,8 @@ function axios_diary(user_id, user_text, res) {
                     outputs = [
                         {
                           "basicCard": {
-                            "title": "부정",
-                            "description": "계좌O",
+                            "title": text_bad + text_goal,
+                            "description": text_bank,
                             "buttons": [
                               {
                                 "action": "webLink",
@@ -69,7 +85,7 @@ function axios_diary(user_id, user_text, res) {
                         {
                           "basicCard": {
                             "title": "주간 분석 그래프가 도착했어요",
-                            "description": "긍정",
+                            "description": text_good + text_goal,
                             "thumbnail": {
                                 "imageUrl": img
                               },
@@ -88,7 +104,7 @@ function axios_diary(user_id, user_text, res) {
                             {
                                 "basicCard": {
                                 "title": "주간 분석 그래프가 도착했어요",
-                                "description": "부정, 계좌X",
+                                "description": text_bad + text_nobank + text_goal,
                                 "thumbnail": {
                                     "imageUrl": img
                                     },
@@ -105,7 +121,7 @@ function axios_diary(user_id, user_text, res) {
                             {
                                 "basicCard": {
                                 "title": "주간 분석 그래프가 도착했어요",
-                                "description": "부정, 계좌O",
+                                "description": text_bank + text_bank + text_goal,
                                 "thumbnail": {
                                     "imageUrl": img
                                     },
@@ -200,6 +216,25 @@ app.post("/goal", function (req, res) {
     var goal_amount = req.body.action.params.goal_amount;
     var goal_reason = req.body.action.params.goal_reason;
     axios_goal(id, goal_amount, goal_reason, res);
+})
+
+app.post("/goal_acheive", function (req, res) {
+    var user_id = req.body.userRequest.user.id;
+    axios.post('http://218.144.108.84/goal_acheive', {
+        id: user_id
+    })
+    res.send({
+        version: "2.0",
+        template: {
+            outputs: [
+                {
+                    simpleText: {
+                        text: "목표 금액 초기화"
+                    }
+                }
+            ]
+        }
+    });
 })
 
 
