@@ -33,7 +33,7 @@ function axios_diary(user_id, user_text, res) {
         var send_img_form = {};
         var send_report_form = {};
 
-        if(emotion == -1){
+        if (emotion == -1) {
             var bad_img_url = "https://diary-chatbot.us-south.cf.appdomain.cloud/img/" + String(user_text.length % 18) + ".jpg";
             send_img_form = {
                 "simpleImage": {
@@ -43,16 +43,7 @@ function axios_diary(user_id, user_text, res) {
             };
         }
 
-        if(goal == -1){
-            text_goal = ""
-        }
-        else{
-            var goal_amount = goal.amount;
-            var goal_reason = goal.reason;
-            text_goal = goal_reason + "을(를) 하기 위한 목표금액 " + goal_amount + "원 달성을 축하드립니다. 목표 금액 초기화를 진행하면, 현재 모은 금액과 목표 금액이 모두 초기화되며, 다시 목표 금액 설정을 통해 새로운 목표를 설정하실 수 있습니다.";
-        }
-
-        if(emotion == 1){
+        if (emotion == 1) {
             outputs = [
                 {
                     simpleText: {
@@ -61,9 +52,9 @@ function axios_diary(user_id, user_text, res) {
                 }
             ];
         }
-        else if(emotion == -1){
+        else if (emotion == -1) {
             url = data.sendUrl;
-            if(url == -1){
+            if (url == -1) {
                 outputs = [
                     send_img_form,
                     {
@@ -73,30 +64,30 @@ function axios_diary(user_id, user_text, res) {
                     }
                 ];
             }
-            else{
+            else {
                 outputs = [
                     send_img_form,
                     {
                         "basicCard": {
-                        "title": text_bad + text_goal,
-                        "description": text_bank,
-                        "buttons": [
-                            {
-                            "action": "webLink",
-                            "label": "송금 링크",
-                            "webLinkUrl": url
-                            }
-                        ]
+                            "title": text_bad + text_goal,
+                            "description": text_bank,
+                            "buttons": [
+                                {
+                                    "action": "webLink",
+                                    "label": "송금 링크",
+                                    "webLinkUrl": url
+                                }
+                            ]
                         }
                     }
                 ];
             }
         }
 
-        if(img != -1){
-            send_report_form = 
+        if (img != -1) {
+            send_report_form =
             {
-                "basicCard": 
+                "basicCard":
                 {
                     "title": "주간 분석 그래프가 도착했어요.",
                     "description": "일주일간의 감정 변화를 표시한 그래프입니다.",
@@ -107,7 +98,19 @@ function axios_diary(user_id, user_text, res) {
             };
             outputs.push(send_report_form);
         }
-        
+
+        if (goal != -1) {
+            var goal_amount = goal.amount;
+            var goal_reason = goal.reason;
+            text_goal = goal_reason + "을(를) 하기 위한 목표금액 " + goal_amount + "원 달성을 축하드립니다. 목표 금액 초기화를 진행하면, 현재 모은 금액과 목표 금액이 모두 초기화되며, 다시 목표 금액 설정을 통해 새로운 목표를 설정하실 수 있습니다.";
+            send_goal_form = {
+                simpleText: {
+                    text: text_goal
+                }
+            }
+            outputs.push(send_goal_form);
+        }
+
         send_kakaotalk(res, outputs);
     }).catch(function (error) {
         console.log(error);
