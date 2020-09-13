@@ -1,11 +1,12 @@
 # 감성 분석 일기장
-## 2020 국어 정보 처리 시스템 경진 대회 - TEAM 감정저금통
+## [2020 국어 정보 처리 시스템 경진 대회](https://www.hkd.or.kr/) - TEAM 감정저금통
 ### 방준식 - KakaoTalk ChatBot
 ### 이호현 - DB
 ### 이관석 - AI
 ### 정준원 - AI
   
-
+[![카카오톡채널QR](https://user-images.githubusercontent.com/32294568/93013932-9ab49d80-f5e7-11ea-9c4d-a9b2363b22e3.PNG)](http://pf.kakao.com/_tGDxdK)
+   
 ## KakaoTalk Chatbot
 ![카카오 채널](https://user-images.githubusercontent.com/32294568/92992576-fa973f80-f526-11ea-8973-4f0a93ac7acd.PNG)   
 * 인사   
