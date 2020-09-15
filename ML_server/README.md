@@ -1,6 +1,4 @@
-# TEAM 감성저금통 - AI 분야
-#### [이관석](https://github.com/LuterGS)
-#### [정준원](https://github.com/azzyjk)
+# AI 분야
 
 ##### 인공지능 서버는 Flask로 제작하였습니다.
 
