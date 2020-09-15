@@ -9,7 +9,7 @@
 #### Request gamsung data  
 <strong>POST</strong> /gamsung  
 <strong>REQUEST BODY SCHEMA :</strong> application/json  
-#####Response samples  
+##### Response samples  
 `
 {   
     "text" : "감정하고자 하는 문장"  
@@ -25,7 +25,7 @@
 
 ## 인공지능
 
-###전처리 데이터
+### 전처리 데이터
 1. [Naver Sentimental Movie Corpus](https://github.com/e9t/nsmc) 에 있는 ratings_train.txt, ratings_test.txt 를 사용함
 2. 개별 문장에서 한국어를 제외한 특수기호 혹은 다른 언어의 글자를 제거
 3. 이후 문장을 음절 단위로 (글자 하나하나씩) 쪼갬
