@@ -3,7 +3,11 @@
   
 [![카카오톡채널QR](https://user-images.githubusercontent.com/32294568/93013932-9ab49d80-f5e7-11ea-9c4d-a9b2363b22e3.PNG)](http://pf.kakao.com/_tGDxdK)
 
-## AI
+## [AI](https://github.com/azzyjk/MoodPiggyBank/tree/master/ML_server#team-%EA%B0%90%EC%84%B1%EC%A0%80%EA%B8%88%ED%86%B5---ai-%EB%B6%84%EC%95%BC)
+* [RESTful API](https://github.com/azzyjk/MoodPiggyBank/tree/master/ML_server#restful-api-%EC%84%A4%EB%AA%85)
+* [인공지능](https://github.com/azzyjk/MoodPiggyBank/tree/master/ML_server#%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5)
+    * [전처리 데이터](https://github.com/azzyjk/MoodPiggyBank/tree/master/ML_server#%EC%A0%84%EC%B2%98%EB%A6%AC-%EB%8D%B0%EC%9D%B4%ED%84%B0)
+    * [신경망 구조](https://github.com/azzyjk/MoodPiggyBank/tree/master/ML_server#%EC%8B%A0%EA%B2%BD%EB%A7%9D--customized-resnet-structure)
 
 ## [KakaoTalk Chatbot](https://github.com/azzyjk/MoodPiggyBank/tree/master/KakaoTalk_Chatbot#kakaotalk-chatbot)
 * [인사](https://github.com/azzyjk/MoodPiggyBank/tree/master/KakaoTalk_Chatbot#%EC%9D%B8%EC%82%AC)
