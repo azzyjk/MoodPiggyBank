@@ -12,7 +12,7 @@ class Network:
     tokenizer = Tokenizer(19417, oov_token='OOV')
     okt = Okt()
 
-    def __init__(self, get_data=1):
+    def __init__(self, get_data=3):
         """/
         # init model 0번째 모델
         layer1 = tf.keras.layers.Embedding(19417, 200),
