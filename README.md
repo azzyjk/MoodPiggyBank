@@ -1,38 +1,17 @@
 # 감성 분석 일기장
 ## [2020 국어 정보 처리 시스템 경진 대회](https://www.hkd.or.kr/) - TEAM 감정저금통
-### 방준식 - KakaoTalk ChatBot
-### 이호현 - DB
-### 이관석 - AI
-### 정준원 - AI
   
 [![카카오톡채널QR](https://user-images.githubusercontent.com/32294568/93013932-9ab49d80-f5e7-11ea-9c4d-a9b2363b22e3.PNG)](http://pf.kakao.com/_tGDxdK)
-   
-## KakaoTalk Chatbot
-![카카오 채널](https://user-images.githubusercontent.com/32294568/92992576-fa973f80-f526-11ea-8973-4f0a93ac7acd.PNG)   
-* 인사   
-![인사](https://user-images.githubusercontent.com/32294568/92992599-1ac6fe80-f527-11ea-8730-b593613fdb6b.PNG)   
-* 사용법   
-![사용법](https://user-images.githubusercontent.com/32294568/92992611-287c8400-f527-11ea-96b3-3a51789e0f14.PNG)   
-* 제작자 정보   
-![제작자](https://user-images.githubusercontent.com/32294568/92992619-35997300-f527-11ea-9f18-ed3c875fed3c.PNG)   
-* 일기 작성   
-![일기 기본](https://user-images.githubusercontent.com/32294568/92992638-51047e00-f527-11ea-8c12-d87a48546982.PNG)   
-일기를 작성하면 감성을 분석하여 긍정/부정 여부를 알려주며, 부정일 경우에는 부가적인 기능으로 좋은 글귀가 적힌 그림을 보여주고 사전에 설정한 금액을 저금할 수 있도록 유도합니다.   
-* 계좌 등록   
-![계좌](https://user-images.githubusercontent.com/32294568/92992700-c7a17b80-f527-11ea-92a9-f8b27d9a4521.PNG)
-![계좌1](https://user-images.githubusercontent.com/32294568/92992702-c96b3f00-f527-11ea-8602-d66d712c0a03.PNG)
-![계좌2](https://user-images.githubusercontent.com/32294568/92992719-e4d64a00-f527-11ea-9d03-e86b05349897.PNG)   
-계좌 등록 기능에서는 사용자가 은행, 계좌번호, 한 번에 저금(입금)할 금액을 입력합니다.
-은행과 금액은 목록에서 선택할 수 있습니다.   
-계좌 등록을 하면, 일기 내용이 부정일 경우 좋은 글귀가 적힌 그림과 함께 저금을 할 수 있는 버튼이 제공됩니다. 저금을 할 수 있는 버튼은 사용자가 입력한 정보를 바탕으로 모바일 송금에서 많은 사람들이 이용하는 APP인 TOSS의 송금 링크가 제공됩니다. 따라서 TOSS APP이 설치되어 있는 상태에서 송금 링크 버튼을 터치하기만 하면, 바로 지정된 계좌로 지정된 금액을 송금할 수 있는 화면이 나옵니다.   
-* 목표 금액 설정   
-![목표금액](https://user-images.githubusercontent.com/32294568/92992732-020b1880-f528-11ea-9879-7b30a001199e.PNG)   
-목표 금액 설정 기능을 이용하여, 목표 금액과 목표 달성 시 하고싶은 것을 입력하면, 목표 금액이 모였을 경우 알려줍니다. 목표 금액 달성 여부는 사용자에게 송금 링크 버튼을 전송했을 때, 모두 송금을 완료했다고 가정합니다.   
-* 목표 달성 안내   
-![목표달성](https://user-images.githubusercontent.com/32294568/92992742-2109aa80-f528-11ea-8035-6a7b70f6a9ef.PNG)   
-* 목표 금액 초기화   
-![초기화](https://user-images.githubusercontent.com/32294568/92992755-3aaaf200-f528-11ea-869d-1a366453222a.PNG)   
-목표 금액 초기화 기능을 이용하여, 설정된 목표 금액을 초기화 할 수 있습니다. 목표 달성 이후에 사용하면, 더 이상 목표 달성을 축하한다는 메시지가 오지 않게 됩니다. 이 기능을 사용하면 현재까지 모은 금액도 초기화되므로 다시 목표 금액 설정 기능을 이용해서 새 목표를 설정할 수 있습니다.   
-* 주간 감정변화 분석 그래프   
-![그래프](https://user-images.githubusercontent.com/32294568/92992787-7e9df700-f528-11ea-9ffb-7b18757f6bfa.PNG)   
-매 주 일요일마다 첫 번째 일기를 작성했을떄, 일주일간의 감정 변화 그래프를 보여줍니다.   
+
+## AI
+
+## [KakaoTalk Chatbot](https://github.com/azzyjk/MoodPiggyBank/tree/master/KakaoTalk_Chatbot#kakaotalk-chatbot)
+* [인사](https://github.com/azzyjk/MoodPiggyBank/tree/master/KakaoTalk_Chatbot#%EC%9D%B8%EC%82%AC)
+* [사용법](https://github.com/azzyjk/MoodPiggyBank/tree/master/KakaoTalk_Chatbot#%EC%82%AC%EC%9A%A9%EB%B2%95)
+* [제작자 정보](https://github.com/azzyjk/MoodPiggyBank/tree/master/KakaoTalk_Chatbot#%EC%A0%9C%EC%9E%91%EC%9E%90-%EC%A0%95%EB%B3%B4)
+* [일기 작성](https://github.com/azzyjk/MoodPiggyBank/tree/master/KakaoTalk_Chatbot#%EC%9D%BC%EA%B8%B0-%EC%9E%91%EC%84%B1)
+* [계좌 등록](https://github.com/azzyjk/MoodPiggyBank/tree/master/KakaoTalk_Chatbot#%EA%B3%84%EC%A2%8C-%EB%93%B1%EB%A1%9D)
+* [목표 금액 설정](https://github.com/azzyjk/MoodPiggyBank/tree/master/KakaoTalk_Chatbot#%EB%AA%A9%ED%91%9C-%EA%B8%88%EC%95%A1-%EC%84%A4%EC%A0%95)
+* [목표 달성 안내](https://github.com/azzyjk/MoodPiggyBank/tree/master/KakaoTalk_Chatbot#%EB%AA%A9%ED%91%9C-%EB%8B%AC%EC%84%B1-%EC%95%88%EB%82%B4)
+* [목표 금액 초기화](https://github.com/azzyjk/MoodPiggyBank/tree/master/KakaoTalk_Chatbot#%EB%AA%A9%ED%91%9C-%EA%B8%88%EC%95%A1-%EC%B4%88%EA%B8%B0%ED%99%94)
+* [주간 감정변화 분석 그래프](https://github.com/azzyjk/MoodPiggyBank/tree/master/KakaoTalk_Chatbot#%EC%A3%BC%EA%B0%84-%EA%B0%90%EC%A0%95%EB%B3%80%ED%99%94-%EB%B6%84%EC%84%9D-%EA%B7%B8%EB%9E%98%ED%94%84)
