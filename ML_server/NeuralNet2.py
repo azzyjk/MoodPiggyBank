@@ -293,12 +293,12 @@ class Network:
 
 
 if __name__ == "__main__":
-    test = Network(1)
+    test = Network(False)
 
     # tf.keras.utils.plot_model(test.model, to_file="test.png", show_shapes=True)
 
-    test.train()
-    test.test()
-    test.test_ready()
+    # test.train()
+    # test.test()
+    # test.test_ready()
     # print(test.get_tokenized_sentence("오늘은 날씨가 좋네"))
 
