@@ -5,7 +5,7 @@
 ## RESTful API 설명
 
 #### Request gamsung data  
-<strong>POST</strong> /gamsung  
+<strong>POST</strong> http://193.122.122.61/gamsung  
 <strong>REQUEST BODY SCHEMA :</strong> application/json  
 ##### Response samples  
 `
